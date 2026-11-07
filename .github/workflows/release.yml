@@ -9,13 +9,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Package mod
+      - name: Build release package
         run: |
-          mkdir -p stage/AndroidsCraftedCare
-          cp -r About 1.7 README.md stage/AndroidsCraftedCare/
-          cd stage && zip -r "../AndroidsCraftedCare-${GITHUB_REF_NAME}.zip" AndroidsCraftedCare
+          set -euo pipefail
+          OUT="/tmp/AndroidsCraftedCare-${GITHUB_REF_NAME}.zip"
+          STAGE="$(mktemp -d)/AndroidsCraftedCare"
+          mkdir -p "$STAGE"
+          cp -r About 1.7 README.md "$STAGE/"
+          (cd "$(dirname "$STAGE")" && zip -r "$OUT" AndroidsCraftedCare)
+          ls -l "$OUT"
       - name: Publish release
         uses: softprops/action-gh-release@v2
         with:
-          files: AndroidsCraftedCare-*.zip
+          files: /tmp/AndroidsCraftedCare-${{ github.ref_name }}.zip
           generate_release_notes: true
