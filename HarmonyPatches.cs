@@ -2,6 +2,7 @@ using System.Reflection;
 using HarmonyLib;
 using RimWorld;
 using Verse;
+using Verse.AI;
 
 namespace AndroidsCraftedCare
 {
@@ -61,6 +62,28 @@ namespace AndroidsCraftedCare
                 __result *= crafting / medicine;
                 return;
             }
+        }
+    }
+
+    /// <summary>
+    /// The job's DISPLAYED skill follows Crafting. Vanilla JobDriver_TendPatient attaches
+    /// waitToil.activeSkill = () => SkillDefOf.Medicine, so every reader of
+    /// JobDriver.ActiveSkill (passionate-work thoughts, job/skill displays) reported Medicine
+    /// while a colonist tended an android. This postfix rewrites that report to Crafting,
+    /// only for TendPatient jobs whose target is a crafted android. Organic tending is untouched.
+    /// </summary>
+    [HarmonyPatch(typeof(JobDriver), "get_ActiveSkill")]
+    public static class Patch_JobDriver_ActiveSkill
+    {
+        public static void Postfix(JobDriver __instance, ref SkillDef __result)
+        {
+            if (__result != SkillDefOf.Medicine) return;
+            if (__instance?.job == null || __instance.job.def != JobDefOf.TendPatient) return;
+
+            var patient = __instance.job.targetA.Thing as Pawn;
+            if (!CraftedCareMain.IsCraftedAndroid(patient)) return;
+
+            __result = SkillDefOf.Crafting;
         }
     }
 }

@@ -3,7 +3,7 @@
   <name>Androids: Crafted Care</name>
   <author>jacob</author>
   <packageId>jacob.androidscraftedcare</packageId>
-  <description>Crafted androids are tended through the Crafting work type instead of Medical. They still use medical beds and vanilla medicine. Organic tending is unchanged.</description>
+  <description>Crafted androids are tended through the Crafting work type instead of Medical. They still use medical beds and the Androids mod's own repair parts. Organic tending is unchanged.</description>
   <supportedVersions>
     <li>1.7</li>
   </supportedVersions>

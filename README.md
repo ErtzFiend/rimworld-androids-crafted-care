@@ -13,6 +13,10 @@ still repaired with the Androids mod's own repair kits/parts.
 3. **Tend speed follows Crafting** - tending speed is the `MedicalTendSpeed` stat. While a colonist is on a
    `TendPatient` job for an android, that stat is scaled by (Crafting skill factor / Medicine skill factor),
    using the curve from the installed stat def. No invented constants.
+4. **Displayed skill follows Crafting** - vanilla `JobDriver_TendPatient` hardcodes the tend toil's
+   `activeSkill` to Medicine, so passionate-work mood and job/skill displays read as Medicine. A Harmony
+   postfix on `JobDriver.ActiveSkill` reports **Crafting** while the job's target is a crafted android.
+   Organic tending still reads as Medicine.
 
 ## What this mod does NOT change (verified against the Androids assembly)
 - **Repair materials.** The Androids mod itself patches `HealthAIUtility.FindBestMedicine` so android patients
@@ -28,8 +32,6 @@ this mod's own `CraftedCareMechanicalProperties` extension, or a hediff whose de
 (Android Conversion converts organics in place, so the hediff matters).
 
 ## Known gaps
-- The job's displayed skill comes from the vanilla driver and still reads as Medicine; only the speed stat and
-  the work-type assignment are redirected.
 - Tending **quality** is not a Medical lever for androids: the Androids repair path either fully repairs the
   hediff when a repair kit is present, or applies a fixed 0.1 tend when there is none.
 - **Not tested in a live game.** The regression tests cover patch registration and gating logic only.

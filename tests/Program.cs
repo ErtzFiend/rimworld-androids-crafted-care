@@ -5,6 +5,7 @@ using AndroidsCraftedCare;
 using HarmonyLib;
 using RimWorld;
 using Verse;
+using Verse.AI;
 
 internal static class Program
 {
@@ -60,6 +61,19 @@ internal static class Program
             p.PatchMethod.DeclaringType == typeof(Patch_StatExtension_GetStatValue));
         Check(gsv != null, "StatExtension.GetStatValue overload resolves");
         Check(gsvRegistered, "speed postfix is registered on StatExtension.GetStatValue");
+
+        // 7. Displayed-skill postfix is registered on JobDriver.get_ActiveSkill.
+        var activeSkill = AccessTools.PropertyGetter(typeof(JobDriver), "ActiveSkill");
+        var askInfo = Harmony.GetPatchInfo(activeSkill);
+        bool askRegistered = askInfo != null && askInfo.Postfixes.Any(p =>
+            p.PatchMethod.DeclaringType == typeof(Patch_JobDriver_ActiveSkill));
+        Check(activeSkill != null, "JobDriver.ActiveSkill getter resolves");
+        Check(askRegistered, "displayed-skill postfix is registered on JobDriver.ActiveSkill");
+
+        // 8. Postfix is null-safe and never touches a non-Medicine result.
+        SkillDef result3 = SkillDefOf.Crafting;
+        Patch_JobDriver_ActiveSkill.Postfix(null, ref result3);
+        Check(result3 == SkillDefOf.Crafting, "postfix leaves non-Medicine results untouched");
 
         Console.WriteLine(failures == 0 ? "ALL TESTS PASSED" : failures + " TEST(S) FAILED");
         return failures == 0 ? 0 : 1;
