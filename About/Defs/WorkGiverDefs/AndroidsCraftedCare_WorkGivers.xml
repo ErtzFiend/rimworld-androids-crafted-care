@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <WorkGiverDef>
+    <defName>AndroidsCraftedCare_RobotTend</defName>
+    <label>tend crafted androids</label>
+    <giverClass>AndroidsCraftedCare.WorkGiver_TendAndroid</giverClass>
+    <workType>Crafting</workType>
+    <priorityInType>100</priorityInType>
+    <verb>tend</verb>
+    <gerund>tending</gerund>
+    <requiredCapacities>
+      <li>Manipulation</li>
+    </requiredCapacities>
+  </WorkGiverDef>
+</Defs>

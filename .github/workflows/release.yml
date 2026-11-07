@@ -1,0 +1,21 @@
+name: Release
+on:
+  push:
+    tags: ['v*']
+permissions:
+  contents: write
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Package mod
+        run: |
+          mkdir -p stage/AndroidsCraftedCare
+          cp -r About 1.7 README.md stage/AndroidsCraftedCare/
+          cd stage && zip -r "../AndroidsCraftedCare-${GITHUB_REF_NAME}.zip" AndroidsCraftedCare
+      - name: Publish release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: AndroidsCraftedCare-*.zip
+          generate_release_notes: true
